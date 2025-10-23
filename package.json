@@ -1,6 +1,6 @@
 {
   "name": "cursor-skills",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A comprehensive repository of best practices, rules, and guidelines for working with CURSOR IDE across different programming environments",
   "main": "index.js",
   "scripts": {
