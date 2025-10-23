@@ -2668,8 +2668,8 @@ def generate_report(df):
     # Basic statistics
     print(f"\\nTotal Records: {len(df):,}")
     print(f"Date Range: {df['date'].min().strftime('%Y-%m-%d')} to {df['date'].max().strftime('%Y-%m-%d')}")
-    print(f"Total Revenue: ${df['sales_amount'].sum():,.2f}")
-    print(f"Average Sale: ${df['sales_amount'].mean():.2f}")
+    print(f"Total Revenue: \${df['sales_amount'].sum():,.2f}")
+    print(f"Average Sale: \${df['sales_amount'].mean():.2f}")
     print(f"Total Quantity Sold: {df['quantity'].sum():,}")
     
     # Top products
