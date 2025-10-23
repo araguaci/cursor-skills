@@ -380,9 +380,9 @@ class CursorSkillsBuilder {
             <div class="section">
                 <h3>📋 Rules & Guidelines</h3>
                 <div class="links">
-                    <a href="/${env}/CURSOR.md">CURSOR IDE Rules</a>
-                    <a href="/${env}/README.md">Analysis & Best Practices</a>
-                    <a href="/${env}/docs/">Detailed Documentation</a>
+                    <a href="/environments/${env}/CURSOR.md">CURSOR IDE Rules</a>
+                    <a href="/environments/${env}/README.md">Analysis & Best Practices</a>
+                    <a href="/environments/${env}/docs/">Detailed Documentation</a>
                 </div>
             </div>
             
@@ -390,9 +390,9 @@ class CursorSkillsBuilder {
                 <h3>🛠️ Templates</h3>
                 <div class="links">
                     <a href="/templates/${env}/">All Templates</a>
-                    <a href="/templates/${env}/laravel-starter/">Laravel Starter</a>
-                    <a href="/templates/${env}/react-starter/">React Starter</a>
-                    <a href="/templates/${env}/django-starter/">Django Starter</a>
+                    <a href="/templates/${env}/rest-api/">REST API</a>
+                    <a href="/templates/${env}/graphql-api/">GraphQL API</a>
+                    <a href="/templates/${env}/grpc-api/">gRPC API</a>
                 </div>
             </div>
             
@@ -400,9 +400,9 @@ class CursorSkillsBuilder {
                 <h3>💡 Examples</h3>
                 <div class="links">
                     <a href="/examples/${env}/">All Examples</a>
-                    <a href="/examples/${env}/api-example/">API Example</a>
-                    <a href="/examples/${env}/component-example/">Component Example</a>
-                    <a href="/examples/${env}/service-example/">Service Example</a>
+                    <a href="/examples/${env}/rest-endpoint-example/">REST Endpoint</a>
+                    <a href="/examples/${env}/graphql-resolver-example/">GraphQL Resolver</a>
+                    <a href="/examples/${env}/authentication-example/">Authentication</a>
                 </div>
             </div>
             

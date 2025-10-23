@@ -64,6 +64,10 @@
               "dest": "/docs/$1"
             },
             {
+              "src": "/environments/(.*)",
+              "dest": "/environments/$1"
+            },
+            {
               "src": "/(.*)",
               "dest": "/index.html"
             }
