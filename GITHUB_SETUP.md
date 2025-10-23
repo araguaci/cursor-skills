@@ -135,7 +135,7 @@ Adicione estes topics ao repositório:
 - [x] Primeiro push realizado
 - [x] README.md atualizado
 - [x] Badges adicionados
-- [ ] Topics configurados
+- [x] Topics configurados
 - [x] Issues habilitados
 - [x] Discussions habilitados
 
