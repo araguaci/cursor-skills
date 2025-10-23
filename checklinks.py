@@ -5,7 +5,7 @@ import html.parser
 import json
 import sys
 from typing import Set, List, Dict
-from datetime import datetime  # Import adicionado para versionamento
+from datetime import datetime  # Import para versionamento
 
 class LinkParser(html.parser.HTMLParser):
     """Parser simples para extrair links <a href> do HTML."""
@@ -21,7 +21,7 @@ class LinkParser(html.parser.HTMLParser):
 
 class Crawler:
     """Crawler para navegar e verificar links até 4 níveis."""
-    def __init__(self, base_url: str, max_depth: int = 5):
+    def __init__(self, base_url: str, max_depth: int = 4):
         self.base_url = base_url
         self.max_depth = max_depth
         self.domain = urllib.parse.urlparse(base_url).netloc
@@ -67,6 +67,9 @@ class Crawler:
         self.visited.add(url)
         self.total_links += 1
 
+        # Exibição de progresso
+        print(f"Processando: {url} (Profundidade: {depth}, Total verificados: {self.total_links})", file=sys.stderr)
+
         # Verifica status
         status = self.check_status(url)
         if status == 404:
@@ -89,13 +92,15 @@ class Crawler:
 
     def run(self) -> Dict:
         """Executa o crawler e retorna resultado em dict para JSON."""
+        print("Iniciando crawl do site...", file=sys.stderr)
         self.crawl(self.base_url)
+        print(f"Crawl concluído. Total de links verificados: {self.total_links}", file=sys.stderr)
         return {
             "base_url": self.base_url,
-            "execution_timestamp": datetime.now().isoformat(),  # Adicionado para rastreamento
+            "execution_timestamp": datetime.now().isoformat(),  # Para rastreamento
             "max_depth": self.max_depth,
             "total_links_checked": self.total_links,
-            "total_broken_links": len(self.broken_links),  # Novo campo explícito
+            "total_broken_links": len(self.broken_links),  # Contagem explícita
             "broken_links": self.broken_links
         }
 
