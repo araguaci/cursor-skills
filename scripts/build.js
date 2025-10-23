@@ -145,22 +145,100 @@ class CursorSkillsBuilder {
     console.log(chalk.yellow('📋 Building project templates...'));
     
     for (const env of this.environments) {
-      const templatesSrcDir = path.join(this.projectRoot, env, 'templates');
       const templatesBuildDir = path.join(this.buildDir, 'templates', env);
+      await fs.ensureDir(templatesBuildDir);
       
-      if (await fs.pathExists(templatesSrcDir)) {
-        await fs.ensureDir(templatesBuildDir);
+      const templates = this.getEnvironmentTemplates(env);
+      for (const template of templates) {
+        const templateDir = path.join(templatesBuildDir, template.id);
+        await fs.ensureDir(templateDir);
         
-        const templates = await fs.readdir(templatesSrcDir);
-        for (const template of templates) {
-          const srcPath = path.join(templatesSrcDir, template);
-          const destPath = path.join(templatesBuildDir, template);
-          
-          if ((await fs.stat(srcPath)).isDirectory()) {
-            await fs.copy(srcPath, destPath);
-            console.log(chalk.gray(`  ✓ Built template ${env}/${template}`));
+        // Generate README.md
+        const readmeContent = `# ${template.title}
+
+${template.description}
+
+## Features
+
+${template.features ? template.features.map(feature => `- ${feature}`).join('\n') : '- Modern development setup\n- Best practices included\n- Production ready'}
+
+## Quick Start
+
+\`\`\`bash
+# Clone this template
+git clone <repository-url> my-project
+cd my-project
+
+# Install dependencies
+${template.installCommand}
+
+# Start development
+${template.startCommand}
+\`\`\`
+
+## Project Structure
+
+\`\`\`
+${template.structure}
+\`\`\`
+
+## Configuration
+
+${template.configuration}
+
+## Development
+
+${template.development}
+
+## Deployment
+
+${template.deployment}
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (\`git checkout -b feature/amazing-feature\`)
+3. Commit your changes (\`git commit -m 'Add some amazing feature'\`)
+4. Push to the branch (\`git push origin feature/amazing-feature\`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+`;
+        await fs.writeFile(path.join(templateDir, 'README.md'), readmeContent);
+        
+        // Generate package.json
+        const packageJson = {
+          name: template.id,
+          version: '1.0.0',
+          description: template.description,
+          main: template.main || 'index.js',
+          scripts: template.scripts,
+          dependencies: template.dependencies,
+          devDependencies: template.devDependencies,
+          keywords: template.keywords || [],
+          author: template.author || 'CURSOR-SKILLS',
+          license: 'MIT'
+        };
+        await fs.writeFile(path.join(templateDir, 'package.json'), JSON.stringify(packageJson, null, 2));
+        
+        // Generate main source file
+        if (template.sourceCode) {
+          const sourceFile = template.sourceFile || 'index.js';
+          await fs.writeFile(path.join(templateDir, sourceFile), template.sourceCode);
+        }
+        
+        // Generate configuration files
+        if (template.configFiles) {
+          for (const [filename, content] of Object.entries(template.configFiles)) {
+            const configPath = path.join(templateDir, filename);
+            await fs.ensureDir(path.dirname(configPath));
+            await fs.writeFile(configPath, content);
           }
         }
+        
+        console.log(chalk.gray(`  ✓ Built template ${env}/${template.id}`));
       }
     }
   }
@@ -274,6 +352,353 @@ npm start
       }
     };
     return dependencies[env] || {};
+  }
+
+  getEnvironmentTemplates(env) {
+    const templatesMap = {
+      'php': [
+        {
+          id: 'laravel-starter',
+          title: 'Laravel Starter',
+          description: 'A complete Laravel application template with authentication, API routes, and modern frontend integration.',
+          features: [
+            'Laravel 10+ with latest features',
+            'Authentication system with Sanctum',
+            'RESTful API with proper validation',
+            'Database migrations and seeders',
+            'Frontend integration with Vite',
+            'Testing setup with PHPUnit',
+            'Docker configuration',
+            'CI/CD pipeline setup'
+          ],
+          installCommand: 'composer install && npm install',
+          startCommand: 'php artisan serve',
+          structure: `app/
+├── Http/Controllers/
+├── Models/
+├── Services/
+├── Repositories/
+├── Middleware/
+└── Requests/
+database/
+├── migrations/
+├── seeders/
+└── factories/
+resources/
+├── views/
+├── js/
+└── css/
+routes/
+├── web.php
+├── api.php
+└── console.php
+tests/
+├── Feature/
+└── Unit/
+config/
+├── app.php
+├── database.php
+└── auth.php`,
+          configuration: 'Configure your database connection in `.env` file and run migrations.',
+          development: 'Use `php artisan serve` for development server and `npm run dev` for frontend assets.',
+          deployment: 'Deploy to production using Laravel Forge, Vapor, or any PHP hosting service.',
+          scripts: {
+            'start': 'php artisan serve',
+            'dev': 'npm run dev',
+            'test': 'php artisan test',
+            'migrate': 'php artisan migrate',
+            'seed': 'php artisan db:seed'
+          },
+          dependencies: {
+            'laravel/framework': '^10.0',
+            'laravel/sanctum': '^3.0'
+          },
+          devDependencies: {
+            'laravel/tinker': '^2.0'
+          },
+          sourceCode: `<?php
+// Laravel Starter Template
+// This is a complete Laravel application template
+
+namespace App\\Http\\Controllers;
+
+use Illuminate\\Http\\Request;
+use Illuminate\\Http\\JsonResponse;
+use App\\Models\\User;
+
+class ApiController extends Controller
+{
+    public function index(): JsonResponse
+    {
+        return response()->json([
+            'message' => 'Welcome to Laravel Starter API',
+            'version' => '1.0.0',
+            'status' => 'active'
+        ]);
+    }
+    
+    public function users(): JsonResponse
+    {
+        $users = User::paginate(15);
+        return response()->json($users);
+    }
+}`,
+          sourceFile: 'app/Http/Controllers/ApiController.php'
+        },
+        {
+          id: 'symfony-starter',
+          title: 'Symfony Starter',
+          description: 'A modern Symfony application template with Doctrine ORM, API Platform, and best practices.',
+          features: [
+            'Symfony 6+ with Flex',
+            'API Platform integration',
+            'Doctrine ORM with migrations',
+            'JWT Authentication',
+            'Swagger/OpenAPI documentation',
+            'Docker development environment',
+            'PHPUnit testing setup',
+            'Code quality tools (PHPStan, PHP-CS-Fixer)'
+          ],
+          installCommand: 'composer install',
+          startCommand: 'symfony server:start',
+          structure: `src/
+├── Controller/
+├── Entity/
+├── Repository/
+├── Service/
+├── Security/
+└── EventSubscriber/
+config/
+├── packages/
+├── routes.yaml
+└── services.yaml
+migrations/
+public/
+├── index.php
+└── assets/
+tests/
+├── Controller/
+└── Entity/`,
+          configuration: 'Configure your database and JWT settings in `.env.local` file.',
+          development: 'Use `symfony server:start` for development server.',
+          deployment: 'Deploy using Symfony Cloud, Docker, or traditional hosting.',
+          scripts: {
+            'start': 'symfony server:start',
+            'test': 'php bin/phpunit',
+            'migrate': 'php bin/console doctrine:migrations:migrate'
+          },
+          dependencies: {
+            'symfony/framework-bundle': '^6.0',
+            'api-platform/core': '^3.0',
+            'lexik/jwt-authentication-bundle': '^2.0'
+          }
+        }
+      ],
+      'webdesign': [
+        {
+          id: 'react-starter',
+          title: 'React Starter',
+          description: 'A modern React application template with TypeScript, Tailwind CSS, and Vite.',
+          features: [
+            'React 18 with TypeScript',
+            'Tailwind CSS for styling',
+            'Vite for fast development',
+            'React Router for navigation',
+            'State management with Zustand',
+            'Testing with Vitest and Testing Library',
+            'ESLint and Prettier configuration',
+            'PWA support'
+          ],
+          installCommand: 'npm install',
+          startCommand: 'npm run dev',
+          structure: `src/
+├── components/
+├── pages/
+├── hooks/
+├── store/
+├── utils/
+└── types/
+public/
+├── index.html
+└── assets/
+tests/
+├── components/
+└── utils/`,
+          configuration: 'Configure your environment variables in `.env.local` file.',
+          development: 'Use `npm run dev` for development server with hot reload.',
+          deployment: 'Build with `npm run build` and deploy to Vercel, Netlify, or any static hosting.',
+          scripts: {
+            'dev': 'vite',
+            'build': 'tsc && vite build',
+            'preview': 'vite preview',
+            'test': 'vitest',
+            'lint': 'eslint src --ext ts,tsx',
+            'format': 'prettier --write src'
+          },
+          dependencies: {
+            'react': '^18.2.0',
+            'react-dom': '^18.2.0',
+            'react-router-dom': '^6.8.0',
+            'zustand': '^4.3.0'
+          },
+          devDependencies: {
+            '@types/react': '^18.0.0',
+            '@types/react-dom': '^18.0.0',
+            '@vitejs/plugin-react': '^3.1.0',
+            'typescript': '^4.9.0',
+            'vite': '^4.1.0',
+            'tailwindcss': '^3.2.0'
+          }
+        }
+      ],
+      'python': [
+        {
+          id: 'django-starter',
+          title: 'Django Starter',
+          description: 'A complete Django application template with REST API, authentication, and modern frontend.',
+          features: [
+            'Django 4+ with latest features',
+            'Django REST Framework',
+            'JWT Authentication',
+            'PostgreSQL database',
+            'Celery for background tasks',
+            'Redis for caching',
+            'Docker development environment',
+            'Comprehensive testing setup'
+          ],
+          installCommand: 'pip install -r requirements.txt',
+          startCommand: 'python manage.py runserver',
+          structure: `project/
+├── settings/
+├── urls.py
+└── wsgi.py
+apps/
+├── users/
+├── api/
+└── core/
+static/
+templates/
+tests/
+├── unit/
+└── integration/`,
+          configuration: 'Configure your database and secret key in `.env` file.',
+          development: 'Use `python manage.py runserver` for development server.',
+          deployment: 'Deploy using Docker, Heroku, or any Python hosting service.',
+          scripts: {
+            'start': 'python manage.py runserver',
+            'migrate': 'python manage.py migrate',
+            'test': 'python manage.py test',
+            'collectstatic': 'python manage.py collectstatic'
+          },
+          dependencies: {
+            'django': '^4.2.0',
+            'djangorestframework': '^3.14.0',
+            'djangorestframework-simplejwt': '^5.2.0',
+            'celery': '^5.2.0',
+            'redis': '^4.5.0'
+          }
+        }
+      ],
+      'node': [
+        {
+          id: 'express-starter',
+          title: 'Express Starter',
+          description: 'A modern Node.js application template with Express, TypeScript, and best practices.',
+          features: [
+            'Express.js with TypeScript',
+            'JWT Authentication',
+            'MongoDB with Mongoose',
+            'Redis for caching',
+            'Docker development environment',
+            'Testing with Jest',
+            'ESLint and Prettier',
+            'API documentation with Swagger'
+          ],
+          installCommand: 'npm install',
+          startCommand: 'npm run dev',
+          structure: `src/
+├── controllers/
+├── models/
+├── routes/
+├── middleware/
+├── services/
+└── utils/
+tests/
+├── unit/
+└── integration/`,
+          configuration: 'Configure your environment variables in `.env` file.',
+          development: 'Use `npm run dev` for development server with hot reload.',
+          deployment: 'Build with `npm run build` and deploy to any Node.js hosting service.',
+          scripts: {
+            'dev': 'nodemon src/index.ts',
+            'build': 'tsc',
+            'start': 'node dist/index.js',
+            'test': 'jest'
+          },
+          dependencies: {
+            'express': '^4.18.0',
+            'mongoose': '^7.0.0',
+            'jsonwebtoken': '^9.0.0',
+            'bcryptjs': '^2.4.3',
+            'cors': '^2.8.5'
+          },
+          devDependencies: {
+            '@types/express': '^4.17.0',
+            '@types/node': '^18.0.0',
+            'typescript': '^4.9.0',
+            'nodemon': '^2.0.0',
+            'jest': '^29.0.0'
+          }
+        }
+      ],
+      'api': [
+        {
+          id: 'rest-api',
+          title: 'REST API',
+          description: 'A comprehensive REST API template with authentication, validation, and documentation.',
+          features: [
+            'RESTful API design',
+            'JWT Authentication',
+            'Input validation',
+            'API documentation',
+            'Rate limiting',
+            'Error handling',
+            'Testing setup',
+            'Docker configuration'
+          ],
+          installCommand: 'npm install',
+          startCommand: 'npm run dev',
+          structure: `src/
+├── controllers/
+├── models/
+├── routes/
+├── middleware/
+├── validators/
+└── docs/
+tests/
+├── unit/
+└── integration/`,
+          configuration: 'Configure your database and JWT settings in `.env` file.',
+          development: 'Use `npm run dev` for development server.',
+          deployment: 'Build and deploy to any Node.js hosting service.',
+          scripts: {
+            'dev': 'nodemon src/index.js',
+            'start': 'node src/index.js',
+            'test': 'jest',
+            'docs': 'swagger-jsdoc -d swaggerDef.js src/routes/*.js'
+          },
+          dependencies: {
+            'express': '^4.18.0',
+            'jsonwebtoken': '^9.0.0',
+            'bcryptjs': '^2.4.3',
+            'joi': '^17.7.0',
+            'swagger-jsdoc': '^6.2.0'
+          }
+        }
+      ]
+    };
+    
+    return templatesMap[env] || [];
   }
 
   async buildConfigs() {
