@@ -380,29 +380,29 @@ class CursorSkillsBuilder {
             <div class="section">
                 <h3>📋 Rules & Guidelines</h3>
                 <div class="links">
-                    <a href="/${env}/">CURSOR IDE Rules</a>
-                    <a href="/${env}/">Analysis & Best Practices</a>
-                    <a href="/${env}/">Detailed Documentation</a>
+                    <a href="/${env}/CURSOR.md">CURSOR IDE Rules</a>
+                    <a href="/${env}/README.md">Analysis & Best Practices</a>
+                    <a href="/${env}/docs/">Detailed Documentation</a>
                 </div>
             </div>
             
             <div class="section">
                 <h3>🛠️ Templates</h3>
                 <div class="links">
-                    <a href="/${env}/">All Templates</a>
-                    <a href="/${env}/">Laravel Starter</a>
-                    <a href="/${env}/">React Starter</a>
-                    <a href="/${env}/">Django Starter</a>
+                    <a href="/templates/${env}/">All Templates</a>
+                    <a href="/templates/${env}/laravel-starter/">Laravel Starter</a>
+                    <a href="/templates/${env}/react-starter/">React Starter</a>
+                    <a href="/templates/${env}/django-starter/">Django Starter</a>
                 </div>
             </div>
             
             <div class="section">
                 <h3>💡 Examples</h3>
                 <div class="links">
-                    <a href="/${env}/">All Examples</a>
-                    <a href="/${env}/">API Example</a>
-                    <a href="/${env}/">Component Example</a>
-                    <a href="/${env}/">Service Example</a>
+                    <a href="/examples/${env}/">All Examples</a>
+                    <a href="/examples/${env}/api-example/">API Example</a>
+                    <a href="/examples/${env}/component-example/">Component Example</a>
+                    <a href="/examples/${env}/service-example/">Service Example</a>
                 </div>
             </div>
             
