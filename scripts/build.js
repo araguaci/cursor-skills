@@ -203,6 +203,16 @@ class CursorSkillsBuilder {
   }
 
   generateMainIndex() {
+    const currentDate = new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    const currentTime = new Date().toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+    
     return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -219,6 +229,13 @@ class CursorSkillsBuilder {
         .links { margin-top: 15px; }
         .links a { display: inline-block; margin-right: 10px; margin-bottom: 5px; color: #0366d6; text-decoration: none; }
         .links a:hover { text-decoration: underline; }
+        .footer { margin-top: 60px; padding: 20px; background: #f6f8fa; border-radius: 8px; text-align: center; border-top: 2px solid #e1e5e9; }
+        .footer-info { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+        .footer-item { }
+        .footer-item strong { color: #0366d6; }
+        .footer-links { margin-top: 15px; }
+        .footer-links a { color: #0366d6; text-decoration: none; margin: 0 10px; }
+        .footer-links a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -252,6 +269,29 @@ class CursorSkillsBuilder {
                 <a href="configs/">CURSOR IDE Configurations</a>
             </div>
         </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="footer-item">
+                    <strong>Last Updated:</strong><br>
+                    ${currentDate} at ${currentTime}
+                </div>
+                <div class="footer-item">
+                    <strong>Version:</strong><br>
+                    v0.3.0
+                </div>
+                <div class="footer-item">
+                    <strong>Status:</strong><br>
+                    ✅ Production Ready
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="docs/CHANGELOG.md">📋 View Changelog</a>
+                <a href="https://github.com/araguaci/cursor-skills">🐙 GitHub Repository</a>
+                <a href="docs/CONTRIBUTING.md">🤝 Contribute</a>
+                <a href="docs/README.md">📖 Documentation</a>
+            </div>
+        </div>
     </div>
 </body>
 </html>`;
@@ -280,6 +320,16 @@ class CursorSkillsBuilder {
       const envPath = path.join(this.buildDir, 'environments', env);
       await fs.ensureDir(envPath);
       
+      const currentDate = new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      const currentTime = new Date().toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+      
       const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -301,6 +351,13 @@ class CursorSkillsBuilder {
         .links a:hover { background: #e1e5e9; }
         .back-link { display: inline-block; margin-bottom: 20px; color: #0366d6; text-decoration: none; }
         .back-link:hover { text-decoration: underline; }
+        .footer { margin-top: 60px; padding: 20px; background: #f6f8fa; border-radius: 8px; text-align: center; border-top: 2px solid #e1e5e9; }
+        .footer-info { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+        .footer-item { }
+        .footer-item strong { color: #0366d6; }
+        .footer-links { margin-top: 15px; }
+        .footer-links a { color: #0366d6; text-decoration: none; margin: 0 10px; }
+        .footer-links a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -357,6 +414,29 @@ class CursorSkillsBuilder {
                     <a href="../configs/settings.json">Settings</a>
                     <a href="../configs/launch.json">Launch Configuration</a>
                 </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="footer-item">
+                    <strong>Last Updated:</strong><br>
+                    ${currentDate} at ${currentTime}
+                </div>
+                <div class="footer-item">
+                    <strong>Version:</strong><br>
+                    v0.3.0
+                </div>
+                <div class="footer-item">
+                    <strong>Status:</strong><br>
+                    ✅ Production Ready
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="../docs/CHANGELOG.md">📋 View Changelog</a>
+                <a href="https://github.com/araguaci/cursor-skills">🐙 GitHub Repository</a>
+                <a href="../docs/CONTRIBUTING.md">🤝 Contribute</a>
+                <a href="../docs/README.md">📖 Documentation</a>
             </div>
         </div>
     </div>
