@@ -30,6 +30,7 @@ class CursorSkillsBuilder {
       await this.buildConfigs();
       await this.generateIndex();
       await this.generateEnvironmentPages();
+      await this.generateSectionPages();
       await this.copyAssets();
       
       console.log(chalk.green.bold('✅ Build completed successfully!'));
@@ -448,6 +449,210 @@ class CursorSkillsBuilder {
     }
     
     console.log(chalk.gray('  ✓ Environment pages generated'));
+  }
+
+  async generateSectionPages() {
+    console.log(chalk.yellow('📄 Generating section pages...'));
+    
+    const currentDate = new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    const currentTime = new Date().toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+
+    // Generate Examples index page
+    const examplesPath = path.join(this.buildDir, 'examples');
+    await fs.ensureDir(examplesPath);
+    
+    const examplesHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURSOR-SKILLS - Examples</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f6f8fa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #e1e5e9; padding-bottom: 20px; }
+        .nav { margin-bottom: 30px; }
+        .nav a { color: #0366d6; text-decoration: none; margin-right: 20px; }
+        .nav a:hover { text-decoration: underline; }
+        .environments { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .environment { border: 1px solid #e1e5e9; border-radius: 8px; padding: 20px; }
+        .environment h3 { margin-top: 0; color: #0366d6; }
+        .links { margin-top: 15px; }
+        .links a { display: inline-block; margin-right: 10px; margin-bottom: 5px; color: #0366d6; text-decoration: none; }
+        .links a:hover { text-decoration: underline; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #0366d6; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .footer { margin-top: 60px; padding: 20px; background: #f6f8fa; border-radius: 8px; text-align: center; border-top: 2px solid #e1e5e9; }
+        .footer-info { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+        .footer-item { }
+        .footer-item strong { color: #0366d6; }
+        .footer-links { margin-top: 15px; }
+        .footer-links a { color: #0366d6; text-decoration: none; margin: 0 10px; }
+        .footer-links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to CURSOR-SKILLS</a>
+        
+        <div class="header">
+            <h1>💡 CURSOR-SKILLS - Examples</h1>
+            <p>Practical examples and code samples for all programming environments.</p>
+        </div>
+        
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/docs/">Documentation</a>
+            <a href="/templates/">Templates</a>
+            <a href="/examples/">Examples</a>
+        </div>
+        
+        <div class="environments">
+            ${this.environments.map(env => `
+                <div class="environment">
+                    <h3>${env.charAt(0).toUpperCase() + env.slice(1)} Examples</h3>
+                    <p>Practical examples and code samples for ${env} development.</p>
+                    <div class="links">
+                        <a href="/examples/${env}/">All Examples</a>
+                        <a href="/examples/${env}/api-example/">API Example</a>
+                        <a href="/examples/${env}/component-example/">Component Example</a>
+                        <a href="/examples/${env}/service-example/">Service Example</a>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="footer-item">
+                    <strong>Last Updated:</strong><br>
+                    ${currentDate} at ${currentTime}
+                </div>
+                <div class="footer-item">
+                    <strong>Version:</strong><br>
+                    v0.3.0
+                </div>
+                <div class="footer-item">
+                    <strong>Status:</strong><br>
+                    ✅ Production Ready
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="/docs/CHANGELOG.md">📋 View Changelog</a>
+                <a href="https://github.com/araguaci/cursor-skills">🐙 GitHub Repository</a>
+                <a href="/docs/CONTRIBUTING.md">🤝 Contribute</a>
+                <a href="/docs/README.md">📖 Documentation</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+    await fs.writeFile(path.join(examplesPath, 'index.html'), examplesHtml);
+    console.log(chalk.gray('  ✓ Generated examples index page'));
+
+    // Generate Templates index page
+    const templatesPath = path.join(this.buildDir, 'templates');
+    await fs.ensureDir(templatesPath);
+    
+    const templatesHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURSOR-SKILLS - Templates</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f6f8fa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #e1e5e9; padding-bottom: 20px; }
+        .nav { margin-bottom: 30px; }
+        .nav a { color: #0366d6; text-decoration: none; margin-right: 20px; }
+        .nav a:hover { text-decoration: underline; }
+        .environments { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .environment { border: 1px solid #e1e5e9; border-radius: 8px; padding: 20px; }
+        .environment h3 { margin-top: 0; color: #0366d6; }
+        .links { margin-top: 15px; }
+        .links a { display: inline-block; margin-right: 10px; margin-bottom: 5px; color: #0366d6; text-decoration: none; }
+        .links a:hover { text-decoration: underline; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #0366d6; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .footer { margin-top: 60px; padding: 20px; background: #f6f8fa; border-radius: 8px; text-align: center; border-top: 2px solid #e1e5e9; }
+        .footer-info { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+        .footer-item { }
+        .footer-item strong { color: #0366d6; }
+        .footer-links { margin-top: 15px; }
+        .footer-links a { color: #0366d6; text-decoration: none; margin: 0 10px; }
+        .footer-links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to CURSOR-SKILLS</a>
+        
+        <div class="header">
+            <h1>🛠️ CURSOR-SKILLS - Templates</h1>
+            <p>Project templates and boilerplates for all programming environments.</p>
+        </div>
+        
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/docs/">Documentation</a>
+            <a href="/templates/">Templates</a>
+            <a href="/examples/">Examples</a>
+        </div>
+        
+        <div class="environments">
+            ${this.environments.map(env => `
+                <div class="environment">
+                    <h3>${env.charAt(0).toUpperCase() + env.slice(1)} Templates</h3>
+                    <p>Project templates and boilerplates for ${env} development.</p>
+                    <div class="links">
+                        <a href="/templates/${env}/">All Templates</a>
+                        <a href="/templates/${env}/starter/">Starter Template</a>
+                        <a href="/templates/${env}/api/">API Template</a>
+                        <a href="/templates/${env}/fullstack/">Full Stack Template</a>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="footer-item">
+                    <strong>Last Updated:</strong><br>
+                    ${currentDate} at ${currentTime}
+                </div>
+                <div class="footer-item">
+                    <strong>Version:</strong><br>
+                    v0.3.0
+                </div>
+                <div class="footer-item">
+                    <strong>Status:</strong><br>
+                    ✅ Production Ready
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="/docs/CHANGELOG.md">📋 View Changelog</a>
+                <a href="https://github.com/araguaci/cursor-skills">🐙 GitHub Repository</a>
+                <a href="/docs/CONTRIBUTING.md">🤝 Contribute</a>
+                <a href="/docs/README.md">📖 Documentation</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+    await fs.writeFile(path.join(templatesPath, 'index.html'), templatesHtml);
+    console.log(chalk.gray('  ✓ Generated templates index page'));
+    
+    console.log(chalk.gray('  ✓ Section pages generated'));
   }
 
   async copyAssets() {
