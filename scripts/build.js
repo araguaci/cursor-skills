@@ -1667,6 +1667,8 @@ tests/
       const configPath = path.join(this.buildDir, 'configs', env);
       await fs.ensureDir(configPath);
       
+      const envConfig = this.getEnvironmentConfig(env);
+      
       const configHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1695,6 +1697,13 @@ tests/
         .footer-links { margin-top: 15px; }
         .footer-links a { color: #0366d6; text-decoration: none; margin: 0 10px; }
         .footer-links a:hover { text-decoration: underline; }
+        .description { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; border-left: 4px solid #0366d6; }
+        .description h4 { margin-top: 0; color: #0366d6; }
+        .description p { margin-bottom: 10px; }
+        .description ul { margin: 10px 0; padding-left: 20px; }
+        .description li { margin-bottom: 5px; }
+        .code-block { background: #f6f8fa; padding: 15px; border-radius: 6px; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 14px; overflow-x: auto; margin: 10px 0; }
+        .code-block pre { margin: 0; }
     </style>
 </head>
 <body>
@@ -1703,7 +1712,7 @@ tests/
         
         <div class="header">
             <h1>⚙️ CURSOR-SKILLS - ${env.charAt(0).toUpperCase() + env.slice(1)} Configuration</h1>
-            <p>CURSOR IDE configurations and settings for ${env} development.</p>
+            <p>${envConfig.description}</p>
         </div>
         
         <div class="nav">
@@ -1711,6 +1720,14 @@ tests/
             <a href="/docs/">Documentation</a>
             <a href="/templates/">Templates</a>
             <a href="/examples/">Examples</a>
+        </div>
+        
+        <div class="description">
+            <h4>🎯 ${env.charAt(0).toUpperCase() + env.slice(1)} Development Setup</h4>
+            <p>${envConfig.setupDescription}</p>
+            <ul>
+                ${envConfig.features.map(feature => `<li>${feature}</li>`).join('')}
+            </ul>
         </div>
         
         <div class="content">
@@ -1755,6 +1772,19 @@ tests/
             </div>
         </div>
         
+        <div class="description">
+            <h4>⚡ Quick Setup</h4>
+            <p>Copy the configuration files to your project:</p>
+            <div class="code-block">
+                <pre># Copy CURSOR IDE settings
+cp /configs/${env}/settings.json .cursor/
+cp /configs/${env}/extensions.json .cursor/
+cp /configs/${env}/launch.json .cursor/
+cp /configs/${env}/tasks.json .cursor/</pre>
+            </div>
+            <p>${envConfig.quickSetup}</p>
+        </div>
+        
         <div class="footer">
             <div class="footer-info">
                 <div class="footer-item">
@@ -1763,7 +1793,7 @@ tests/
                 </div>
                 <div class="footer-item">
                     <strong>Version:</strong><br>
-                    v0.3.0
+                    v0.4.0
                 </div>
                 <div class="footer-item">
                     <strong>Status:</strong><br>
@@ -4706,6 +4736,157 @@ app.listen(PORT, () => {
     };
     
     return templatesMap[env] || [];
+  }
+
+  getEnvironmentConfig(env) {
+    const configsMap = {
+      'php': {
+        description: 'CURSOR IDE configurations and settings optimized for PHP development with Laravel, Symfony, and WordPress.',
+        setupDescription: 'Configure CURSOR IDE for professional PHP development with debugging, testing, and code quality tools.',
+        features: [
+          'PHP IntelliSense with advanced autocomplete',
+          'Xdebug integration for debugging',
+          'PHPUnit testing support',
+          'Composer dependency management',
+          'PSR-12 coding standards enforcement',
+          'Laravel Artisan command integration',
+          'Symfony console support',
+          'WordPress development tools'
+        ],
+        quickSetup: 'Install PHP extensions, configure Xdebug, and set up your preferred framework (Laravel, Symfony, or WordPress).'
+      },
+      'webdesign': {
+        description: 'CURSOR IDE configurations for modern web development with React, Vue, Angular, and vanilla JavaScript.',
+        setupDescription: 'Set up CURSOR IDE for frontend development with hot reload, debugging, and modern tooling.',
+        features: [
+          'React, Vue, and Angular IntelliSense',
+          'TypeScript support with type checking',
+          'CSS/SCSS autocomplete and validation',
+          'Live Server integration',
+          'Browser debugging support',
+          'ESLint and Prettier configuration',
+          'Tailwind CSS IntelliSense',
+          'Component library integration'
+        ],
+        quickSetup: 'Install Node.js, configure your preferred framework, and set up development server with hot reload.'
+      },
+      'python': {
+        description: 'CURSOR IDE configurations for Python development with Django, Flask, FastAPI, and data science tools.',
+        setupDescription: 'Configure CURSOR IDE for Python development with virtual environments, debugging, and testing.',
+        features: [
+          'Python IntelliSense with type hints',
+          'Virtual environment management',
+          'Django and Flask framework support',
+          'Jupyter notebook integration',
+          'Pytest testing framework',
+          'Black code formatting',
+          'Flake8 linting support',
+          'Data science libraries (Pandas, NumPy)'
+        ],
+        quickSetup: 'Create a virtual environment, install your framework dependencies, and configure Python interpreter.'
+      },
+      'node': {
+        description: 'CURSOR IDE configurations for Node.js development with Express, NestJS, and modern JavaScript tooling.',
+        setupDescription: 'Set up CURSOR IDE for Node.js development with debugging, testing, and performance monitoring.',
+        features: [
+          'Node.js IntelliSense and debugging',
+          'Express and NestJS framework support',
+          'NPM and Yarn package management',
+          'Jest testing framework',
+          'ESLint and Prettier configuration',
+          'Docker integration',
+          'API development tools',
+          'Performance monitoring'
+        ],
+        quickSetup: 'Install Node.js, set up your project with package.json, and configure your preferred framework.'
+      },
+      'api': {
+        description: 'CURSOR IDE configurations for API development with REST, GraphQL, and microservices architecture.',
+        setupDescription: 'Configure CURSOR IDE for API development with testing, documentation, and deployment tools.',
+        features: [
+          'REST API development tools',
+          'GraphQL schema support',
+          'API testing with Postman integration',
+          'OpenAPI/Swagger documentation',
+          'Authentication and authorization',
+          'Rate limiting and security',
+          'Database integration',
+          'Microservices architecture'
+        ],
+        quickSetup: 'Set up your API framework, configure authentication, and implement proper testing and documentation.'
+      },
+      'integrations': {
+        description: 'CURSOR IDE configurations for system integrations, webhooks, and third-party service connections.',
+        setupDescription: 'Configure CURSOR IDE for building robust integrations with external services and APIs.',
+        features: [
+          'Webhook development and testing',
+          'Database migration tools',
+          'Message queue integration',
+          'Service mesh configuration',
+          'API gateway setup',
+          'Error handling and monitoring',
+          'Data transformation tools',
+          'Security and compliance'
+        ],
+        quickSetup: 'Set up your integration platform, configure webhooks, and implement proper error handling.'
+      },
+      'mobile': {
+        description: 'CURSOR IDE configurations for mobile development with React Native, Flutter, and native iOS/Android.',
+        setupDescription: 'Set up CURSOR IDE for cross-platform and native mobile development.',
+        features: [
+          'React Native development tools',
+          'Flutter framework support',
+          'iOS and Android debugging',
+          'Expo development tools',
+          'Mobile testing frameworks',
+          'Device emulation',
+          'Performance profiling',
+          'App store deployment'
+        ],
+        quickSetup: 'Install mobile development tools, set up emulators, and configure your preferred framework.'
+      },
+      'devops': {
+        description: 'CURSOR IDE configurations for DevOps practices with Docker, Kubernetes, and CI/CD pipelines.',
+        setupDescription: 'Configure CURSOR IDE for infrastructure management and deployment automation.',
+        features: [
+          'Docker container management',
+          'Kubernetes cluster configuration',
+          'CI/CD pipeline development',
+          'Infrastructure as Code (IaC)',
+          'Monitoring and logging',
+          'Security scanning',
+          'Cloud platform integration',
+          'Automated testing'
+        ],
+        quickSetup: 'Set up Docker, configure Kubernetes, and implement CI/CD pipelines for your infrastructure.'
+      },
+      'testing': {
+        description: 'CURSOR IDE configurations for comprehensive testing with unit, integration, and E2E testing frameworks.',
+        setupDescription: 'Set up CURSOR IDE for testing across all levels with proper debugging and reporting.',
+        features: [
+          'Unit testing frameworks (Jest, PHPUnit, pytest)',
+          'Integration testing tools',
+          'E2E testing with Cypress and Playwright',
+          'Performance testing with K6',
+          'Test coverage reporting',
+          'Mock and stub tools',
+          'Test data management',
+          'Continuous testing'
+        ],
+        quickSetup: 'Configure your testing framework, set up test data, and implement continuous testing in your pipeline.'
+      }
+    };
+    
+    return configsMap[env] || {
+      description: `CURSOR IDE configurations and settings for ${env} development.`,
+      setupDescription: `Configure CURSOR IDE for ${env} development with best practices and modern tooling.`,
+      features: [
+        'Modern development setup',
+        'Best practices included',
+        'Production ready configuration'
+      ],
+      quickSetup: `Set up your ${env} development environment with the provided configurations.`
+    };
   }
 
   async copyAssets() {
