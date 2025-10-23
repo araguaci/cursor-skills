@@ -169,24 +169,111 @@ class CursorSkillsBuilder {
     console.log(chalk.yellow('📝 Building practical examples...'));
     
     for (const env of this.environments) {
-      const examplesSrcDir = path.join(this.projectRoot, env, 'examples');
       const examplesBuildDir = path.join(this.buildDir, 'examples', env);
+      await fs.ensureDir(examplesBuildDir);
       
-      if (await fs.pathExists(examplesSrcDir)) {
-        await fs.ensureDir(examplesBuildDir);
+      const examples = this.getEnvironmentExamples(env);
+      for (const example of examples) {
+        const exampleDir = path.join(examplesBuildDir, example.id);
+        await fs.ensureDir(exampleDir);
         
-        const examples = await fs.readdir(examplesSrcDir);
-        for (const example of examples) {
-          const srcPath = path.join(examplesSrcDir, example);
-          const destPath = path.join(examplesBuildDir, example);
-          
-          if ((await fs.stat(srcPath)).isDirectory()) {
-            await fs.copy(srcPath, destPath);
-            console.log(chalk.gray(`  ✓ Built example ${env}/${example}`));
-          }
-        }
+        // Generate README.md
+        const readmeContent = `# ${example.title}
+
+${example.description}
+
+## Code Example
+
+\`\`\`${this.getFileExtension(env)}
+${example.code}
+\`\`\`
+
+${example.files ? `## Files
+
+${example.files.map(file => `- ${file}`).join('\n')}` : ''}
+
+## Usage
+
+\`\`\`bash
+# Install dependencies
+npm install
+
+# Run the example
+npm start
+\`\`\`
+`;
+        await fs.writeFile(path.join(exampleDir, 'README.md'), readmeContent);
+        
+        // Generate index.js with the actual code
+        const indexContent = example.code || `// ${example.title}\nconsole.log('Hello from ${example.id}!');`;
+        await fs.writeFile(path.join(exampleDir, 'index.js'), indexContent);
+        
+        // Generate package.json
+        const packageJson = {
+          name: example.id,
+          version: '1.0.0',
+          description: example.description,
+          main: 'index.js',
+          scripts: {
+            start: 'node index.js'
+          },
+          dependencies: this.getEnvironmentDependencies(env)
+        };
+        await fs.writeFile(path.join(exampleDir, 'package.json'), JSON.stringify(packageJson, null, 2));
+        
+        console.log(chalk.gray(`  ✓ Built example ${env}/${example.id}`));
       }
     }
+  }
+
+  getFileExtension(env) {
+    const extensions = {
+      'php': 'php',
+      'webdesign': 'javascript',
+      'python': 'python',
+      'node': 'javascript',
+      'api': 'javascript',
+      'integrations': 'javascript',
+      'mobile': 'javascript',
+      'devops': 'yaml',
+      'testing': 'javascript'
+    };
+    return extensions[env] || 'javascript';
+  }
+
+  getEnvironmentDependencies(env) {
+    const dependencies = {
+      'php': {},
+      'webdesign': {
+        'react': '^18.0.0',
+        'vue': '^3.0.0'
+      },
+      'python': {},
+      'node': {
+        'express': '^4.18.0',
+        'socket.io': '^4.7.0',
+        '@nestjs/common': '^10.0.0'
+      },
+      'api': {
+        'express': '^4.18.0',
+        'apollo-server-express': '^3.12.0',
+        'jsonwebtoken': '^9.0.0'
+      },
+      'integrations': {
+        'express': '^4.18.0',
+        'bull': '^4.11.0'
+      },
+      'mobile': {
+        'react-native': '^0.72.0',
+        'expo': '^49.0.0'
+      },
+      'devops': {},
+      'testing': {
+        'jest': '^29.0.0',
+        'cypress': '^13.0.0'
+      }
+    };
+    return dependencies[env] || {};
   }
 
   async buildConfigs() {
