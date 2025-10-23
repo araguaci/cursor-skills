@@ -251,10 +251,10 @@ class CursorSkillsBuilder {
                     <h3>${env.charAt(0).toUpperCase() + env.slice(1)}</h3>
                     <p>Development rules and best practices for ${env} programming.</p>
                     <div class="links">
-                        <a href="environments/${env}/CURSOR.md">Rules</a>
-                        <a href="environments/${env}/README.md">Analysis</a>
-                        <a href="templates/${env}/">Templates</a>
-                        <a href="examples/${env}/">Examples</a>
+                        <a href="/${env}/">Rules</a>
+                        <a href="/${env}/">Analysis</a>
+                        <a href="/${env}/">Templates</a>
+                        <a href="/${env}/">Examples</a>
                     </div>
                 </div>
             `).join('')}
@@ -263,10 +263,10 @@ class CursorSkillsBuilder {
         <div style="margin-top: 40px; text-align: center;">
             <h2>📚 Documentation</h2>
             <div class="links">
-                <a href="docs/README.md">Main Documentation</a>
-                <a href="docs/CONTRIBUTING.md">Contributing Guide</a>
-                <a href="docs/CHANGELOG.md">Changelog</a>
-                <a href="configs/">CURSOR IDE Configurations</a>
+                <a href="/docs/">Main Documentation</a>
+                <a href="/docs/CONTRIBUTING.md">Contributing Guide</a>
+                <a href="/docs/CHANGELOG.md">Changelog</a>
+                <a href="/configs/">CURSOR IDE Configurations</a>
             </div>
         </div>
         
@@ -286,10 +286,10 @@ class CursorSkillsBuilder {
                 </div>
             </div>
             <div class="footer-links">
-                <a href="docs/CHANGELOG.md">📋 View Changelog</a>
+                <a href="/docs/CHANGELOG.md">📋 View Changelog</a>
                 <a href="https://github.com/araguaci/cursor-skills">🐙 GitHub Repository</a>
-                <a href="docs/CONTRIBUTING.md">🤝 Contribute</a>
-                <a href="docs/README.md">📖 Documentation</a>
+                <a href="/docs/CONTRIBUTING.md">🤝 Contribute</a>
+                <a href="/docs/README.md">📖 Documentation</a>
             </div>
         </div>
     </div>
@@ -380,39 +380,39 @@ class CursorSkillsBuilder {
             <div class="section">
                 <h3>📋 Rules & Guidelines</h3>
                 <div class="links">
-                    <a href="../environments/${env}/CURSOR.md">CURSOR IDE Rules</a>
-                    <a href="../environments/${env}/README.md">Analysis & Best Practices</a>
-                    <a href="../environments/${env}/docs/">Detailed Documentation</a>
+                    <a href="/${env}/">CURSOR IDE Rules</a>
+                    <a href="/${env}/">Analysis & Best Practices</a>
+                    <a href="/${env}/">Detailed Documentation</a>
                 </div>
             </div>
             
             <div class="section">
                 <h3>🛠️ Templates</h3>
                 <div class="links">
-                    <a href="../templates/${env}/">All Templates</a>
-                    <a href="../templates/${env}/laravel-starter/">Laravel Starter</a>
-                    <a href="../templates/${env}/react-starter/">React Starter</a>
-                    <a href="../templates/${env}/django-starter/">Django Starter</a>
+                    <a href="/${env}/">All Templates</a>
+                    <a href="/${env}/">Laravel Starter</a>
+                    <a href="/${env}/">React Starter</a>
+                    <a href="/${env}/">Django Starter</a>
                 </div>
             </div>
             
             <div class="section">
                 <h3>💡 Examples</h3>
                 <div class="links">
-                    <a href="../examples/${env}/">All Examples</a>
-                    <a href="../examples/${env}/api-example/">API Example</a>
-                    <a href="../examples/${env}/component-example/">Component Example</a>
-                    <a href="../examples/${env}/service-example/">Service Example</a>
+                    <a href="/${env}/">All Examples</a>
+                    <a href="/${env}/">API Example</a>
+                    <a href="/${env}/">Component Example</a>
+                    <a href="/${env}/">Service Example</a>
                 </div>
             </div>
             
             <div class="section">
                 <h3>⚙️ Configuration</h3>
                 <div class="links">
-                    <a href="../configs/">CURSOR IDE Settings</a>
-                    <a href="../configs/extensions.json">Extensions</a>
-                    <a href="../configs/settings.json">Settings</a>
-                    <a href="../configs/launch.json">Launch Configuration</a>
+                    <a href="/configs/">CURSOR IDE Settings</a>
+                    <a href="/configs/extensions.json">Extensions</a>
+                    <a href="/configs/settings.json">Settings</a>
+                    <a href="/configs/launch.json">Launch Configuration</a>
                 </div>
             </div>
         </div>
@@ -433,10 +433,10 @@ class CursorSkillsBuilder {
                 </div>
             </div>
             <div class="footer-links">
-                <a href="../docs/CHANGELOG.md">📋 View Changelog</a>
+                <a href="/docs/CHANGELOG.md">📋 View Changelog</a>
                 <a href="https://github.com/araguaci/cursor-skills">🐙 GitHub Repository</a>
-                <a href="../docs/CONTRIBUTING.md">🤝 Contribute</a>
-                <a href="../docs/README.md">📖 Documentation</a>
+                <a href="/docs/CONTRIBUTING.md">🤝 Contribute</a>
+                <a href="/docs/README.md">📖 Documentation</a>
             </div>
         </div>
     </div>
