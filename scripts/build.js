@@ -35,6 +35,7 @@ class CursorSkillsBuilder {
       await this.generateEnvironmentConfigPages();
       await this.generateEnvironmentDocsPages();
       await this.generateSpecificTemplatePages();
+      await this.generateEnvironmentConfigFiles();
       await this.copyAssets();
       
       console.log(chalk.green.bold('✅ Build completed successfully!'));
@@ -1555,6 +1556,336 @@ class CursorSkillsBuilder {
     }
     
     console.log(chalk.gray('  ✓ Specific template pages generated'));
+  }
+
+  async generateEnvironmentConfigFiles() {
+    console.log(chalk.yellow('📄 Generating environment config files...'));
+    
+    // Generate config files for each environment
+    for (const env of this.environments) {
+      const configDir = path.join(this.buildDir, 'configs', env);
+      await fs.ensureDir(configDir);
+      
+      // Generate settings.json
+      const settingsJson = {
+        "editor": {
+          "fontSize": 14,
+          "fontFamily": "'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace",
+          "fontLigatures": true,
+          "tabSize": 2,
+          "insertSpaces": true,
+          "wordWrap": "on",
+          "lineNumbers": "on",
+          "minimap": { "enabled": true },
+          "bracketPairColorization": { "enabled": true }
+        },
+        "files": {
+          "autoSave": "afterDelay",
+          "autoSaveDelay": 1000,
+          "exclude": {
+            "**/node_modules": true,
+            "**/dist": true,
+            "**/build": true,
+            "**/.git": true
+          }
+        },
+        "search": {
+          "exclude": {
+            "**/node_modules": true,
+            "**/dist": true,
+            "**/build": true
+          }
+        },
+        "terminal": {
+          "integrated": {
+            "fontSize": 14,
+            "fontFamily": "'Fira Code', 'Cascadia Code', monospace"
+          }
+        }
+      };
+      
+      await fs.writeFile(
+        path.join(configDir, 'settings.json'), 
+        JSON.stringify(settingsJson, null, 2)
+      );
+      console.log(chalk.gray(`  ✓ Generated ${env}/settings.json`));
+      
+      // Generate extensions.json
+      const extensionsJson = {
+        "recommendations": this.getEnvironmentExtensions(env)
+      };
+      
+      await fs.writeFile(
+        path.join(configDir, 'extensions.json'), 
+        JSON.stringify(extensionsJson, null, 2)
+      );
+      console.log(chalk.gray(`  ✓ Generated ${env}/extensions.json`));
+      
+      // Generate launch.json
+      const launchJson = {
+        "version": "0.2.0",
+        "configurations": this.getEnvironmentLaunchConfigs(env)
+      };
+      
+      await fs.writeFile(
+        path.join(configDir, 'launch.json'), 
+        JSON.stringify(launchJson, null, 2)
+      );
+      console.log(chalk.gray(`  ✓ Generated ${env}/launch.json`));
+      
+      // Generate tasks.json
+      const tasksJson = {
+        "version": "2.0.0",
+        "tasks": this.getEnvironmentTasks(env)
+      };
+      
+      await fs.writeFile(
+        path.join(configDir, 'tasks.json'), 
+        JSON.stringify(tasksJson, null, 2)
+      );
+      console.log(chalk.gray(`  ✓ Generated ${env}/tasks.json`));
+    }
+    
+    console.log(chalk.gray('  ✓ Environment config files generated'));
+  }
+
+  getEnvironmentExtensions(env) {
+    const extensionsMap = {
+      'php': [
+        'bmewburn.vscode-intelephense-client',
+        'xdebug.php-debug',
+        'bradlc.vscode-tailwindcss',
+        'formulahendry.auto-rename-tag'
+      ],
+      'webdesign': [
+        'esbenp.prettier-vscode',
+        'bradlc.vscode-tailwindcss',
+        'ms-vscode.vscode-typescript-next',
+        'formulahendry.auto-rename-tag'
+      ],
+      'python': [
+        'ms-python.python',
+        'ms-python.pylint',
+        'ms-python.black-formatter',
+        'ms-toolsai.jupyter'
+      ],
+      'node': [
+        'ms-vscode.vscode-typescript-next',
+        'esbenp.prettier-vscode',
+        'ms-vscode.vscode-json',
+        'bradlc.vscode-tailwindcss'
+      ],
+      'api': [
+        'ms-vscode.vscode-typescript-next',
+        'esbenp.prettier-vscode',
+        'humao.rest-client',
+        'ms-vscode.vscode-json'
+      ],
+      'integrations': [
+        'ms-vscode.vscode-typescript-next',
+        'esbenp.prettier-vscode',
+        'ms-vscode.vscode-json',
+        'humao.rest-client'
+      ],
+      'mobile': [
+        'ms-vscode.vscode-typescript-next',
+        'esbenp.prettier-vscode',
+        'ms-vscode.vscode-json',
+        'bradlc.vscode-tailwindcss'
+      ],
+      'devops': [
+        'ms-kubernetes-tools.vscode-kubernetes-tools',
+        'ms-azuretools.vscode-docker',
+        'redhat.vscode-yaml',
+        'ms-vscode.vscode-json'
+      ],
+      'testing': [
+        'ms-vscode.vscode-typescript-next',
+        'esbenp.prettier-vscode',
+        'ms-vscode.vscode-json',
+        'humao.rest-client'
+      ]
+    };
+    
+    return extensionsMap[env] || [];
+  }
+
+  getEnvironmentLaunchConfigs(env) {
+    const launchConfigsMap = {
+      'php': [
+        {
+          "name": "PHP Debug",
+          "type": "php",
+          "request": "launch",
+          "program": "${file}",
+          "cwd": "${fileDirname}",
+          "port": 9003
+        }
+      ],
+      'webdesign': [
+        {
+          "name": "Launch Chrome",
+          "type": "chrome",
+          "request": "launch",
+          "url": "http://localhost:3000",
+          "webRoot": "${workspaceFolder}"
+        }
+      ],
+      'python': [
+        {
+          "name": "Python: Current File",
+          "type": "python",
+          "request": "launch",
+          "program": "${file}",
+          "console": "integratedTerminal"
+        }
+      ],
+      'node': [
+        {
+          "name": "Launch Node",
+          "type": "node",
+          "request": "launch",
+          "program": "${file}",
+          "console": "integratedTerminal"
+        }
+      ],
+      'api': [
+        {
+          "name": "Launch API Server",
+          "type": "node",
+          "request": "launch",
+          "program": "${workspaceFolder}/src/server.js",
+          "console": "integratedTerminal"
+        }
+      ],
+      'integrations': [
+        {
+          "name": "Launch Integration",
+          "type": "node",
+          "request": "launch",
+          "program": "${file}",
+          "console": "integratedTerminal"
+        }
+      ],
+      'mobile': [
+        {
+          "name": "Launch Mobile App",
+          "type": "node",
+          "request": "launch",
+          "program": "${file}",
+          "console": "integratedTerminal"
+        }
+      ],
+      'devops': [
+        {
+          "name": "Docker Debug",
+          "type": "node",
+          "request": "launch",
+          "program": "${file}",
+          "console": "integratedTerminal"
+        }
+      ],
+      'testing': [
+        {
+          "name": "Run Tests",
+          "type": "node",
+          "request": "launch",
+          "program": "${workspaceFolder}/node_modules/.bin/jest",
+          "args": ["--runInBand"],
+          "console": "integratedTerminal"
+        }
+      ]
+    };
+    
+    return launchConfigsMap[env] || [];
+  }
+
+  getEnvironmentTasks(env) {
+    const tasksMap = {
+      'php': [
+        {
+          "label": "PHP: Run",
+          "type": "shell",
+          "command": "php",
+          "args": ["${file}"],
+          "group": "build"
+        }
+      ],
+      'webdesign': [
+        {
+          "label": "Web: Build",
+          "type": "shell",
+          "command": "npm",
+          "args": ["run", "build"],
+          "group": "build"
+        }
+      ],
+      'python': [
+        {
+          "label": "Python: Run",
+          "type": "shell",
+          "command": "python",
+          "args": ["${file}"],
+          "group": "build"
+        }
+      ],
+      'node': [
+        {
+          "label": "Node: Run",
+          "type": "shell",
+          "command": "node",
+          "args": ["${file}"],
+          "group": "build"
+        }
+      ],
+      'api': [
+        {
+          "label": "API: Start",
+          "type": "shell",
+          "command": "npm",
+          "args": ["start"],
+          "group": "build"
+        }
+      ],
+      'integrations': [
+        {
+          "label": "Integration: Run",
+          "type": "shell",
+          "command": "node",
+          "args": ["${file}"],
+          "group": "build"
+        }
+      ],
+      'mobile': [
+        {
+          "label": "Mobile: Start",
+          "type": "shell",
+          "command": "npm",
+          "args": ["start"],
+          "group": "build"
+        }
+      ],
+      'devops': [
+        {
+          "label": "Docker: Build",
+          "type": "shell",
+          "command": "docker",
+          "args": ["build", "-t", "app", "."],
+          "group": "build"
+        }
+      ],
+      'testing': [
+        {
+          "label": "Test: Run",
+          "type": "shell",
+          "command": "npm",
+          "args": ["test"],
+          "group": "test"
+        }
+      ]
+    };
+    
+    return tasksMap[env] || [];
   }
 
   getEnvironmentExamples(env) {
