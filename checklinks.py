@@ -5,6 +5,7 @@ import html.parser
 import json
 import sys
 from typing import Set, List, Dict
+from datetime import datetime  # Import adicionado para versionamento
 
 class LinkParser(html.parser.HTMLParser):
     """Parser simples para extrair links <a href> do HTML."""
@@ -20,7 +21,7 @@ class LinkParser(html.parser.HTMLParser):
 
 class Crawler:
     """Crawler para navegar e verificar links até 4 níveis."""
-    def __init__(self, base_url: str, max_depth: int = 4):
+    def __init__(self, base_url: str, max_depth: int = 5):
         self.base_url = base_url
         self.max_depth = max_depth
         self.domain = urllib.parse.urlparse(base_url).netloc
@@ -91,8 +92,10 @@ class Crawler:
         self.crawl(self.base_url)
         return {
             "base_url": self.base_url,
+            "execution_timestamp": datetime.now().isoformat(),  # Adicionado para rastreamento
             "max_depth": self.max_depth,
             "total_links_checked": self.total_links,
+            "total_broken_links": len(self.broken_links),  # Novo campo explícito
             "broken_links": self.broken_links
         }
 
@@ -100,10 +103,14 @@ if __name__ == "__main__":
     base_url = "https://cursor-skills.vercel.app/"
     crawler = Crawler(base_url)
     result = crawler.run()
-    log_file = "brokenlinks.log"
+    
+    # Versionamento do nome do arquivo
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    log_file = f"brokenlinks_{timestamp}.log"
+    
     try:
         with open(log_file, 'w', encoding='utf-8') as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
-        print(f"Resultado salvo em {log_file}", file=sys.stderr)
-    except IOError as e:
+        print(f"Resultado versionado salvo em {log_file} (Total links: {result['total_links_checked']}, Quebrados: {result['total_broken_links']})", file=sys.stderr)
+    except (IOError, ValueError) as e:  # Captura erros de escrita ou formatação de data
         print(f"Erro ao escrever no arquivo {log_file}: {e}", file=sys.stderr)

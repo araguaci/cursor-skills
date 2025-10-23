@@ -34,6 +34,7 @@ class CursorSkillsBuilder {
       await this.generateEnvironmentSectionPages();
       await this.generateEnvironmentConfigPages();
       await this.generateEnvironmentDocsPages();
+      await this.generateSpecificTemplatePages();
       await this.copyAssets();
       
       console.log(chalk.green.bold('✅ Build completed successfully!'));
@@ -411,9 +412,9 @@ class CursorSkillsBuilder {
                 <h3>🛠️ Templates</h3>
                 <div class="links">
                     <a href="/templates/${env}/">All Templates</a>
-                    <a href="/templates/${env}/rest-api/">REST API</a>
-                    <a href="/templates/${env}/graphql-api/">GraphQL API</a>
-                    <a href="/templates/${env}/grpc-api/">gRPC API</a>
+                    ${this.getEnvironmentTemplates(env).slice(0, 3).map(template => `
+                        <a href="/templates/${env}/${template.id}/">${template.title}</a>
+                    `).join('')}
                 </div>
             </div>
             
@@ -421,9 +422,9 @@ class CursorSkillsBuilder {
                 <h3>💡 Examples</h3>
                 <div class="links">
                     <a href="/examples/${env}/">All Examples</a>
-                    <a href="/examples/${env}/rest-endpoint-example/">REST Endpoint</a>
-                    <a href="/examples/${env}/graphql-resolver-example/">GraphQL Resolver</a>
-                    <a href="/examples/${env}/authentication-example/">Authentication</a>
+                    ${this.getEnvironmentExamples(env).slice(0, 3).map(example => `
+                        <a href="/examples/${env}/${example.id}/">${example.title}</a>
+                    `).join('')}
                 </div>
             </div>
             
@@ -1411,6 +1412,149 @@ class CursorSkillsBuilder {
     }
     
     console.log(chalk.gray('  ✓ Environment docs pages generated'));
+  }
+
+  async generateSpecificTemplatePages() {
+    console.log(chalk.yellow('📄 Generating specific template pages...'));
+    
+    const currentDate = new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    const currentTime = new Date().toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+
+    // Generate individual template pages
+    for (const env of this.environments) {
+      const templates = this.getEnvironmentTemplates(env);
+      
+      for (const template of templates) {
+        const templatePath = path.join(this.buildDir, 'templates', env, template.id);
+        await fs.ensureDir(templatePath);
+        
+        const templateHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURSOR-SKILLS - ${template.title}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f6f8fa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #e1e5e9; padding-bottom: 20px; }
+        .nav { margin-bottom: 30px; }
+        .nav a { color: #0366d6; text-decoration: none; margin-right: 20px; }
+        .nav a:hover { text-decoration: underline; }
+        .content { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .section { }
+        .section h3 { color: #0366d6; margin-top: 0; }
+        .links { margin-top: 15px; }
+        .links a { display: block; margin-bottom: 8px; color: #0366d6; text-decoration: none; padding: 8px 12px; background: #f6f8fa; border-radius: 4px; }
+        .links a:hover { background: #e1e5e9; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #0366d6; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .footer { margin-top: 60px; padding: 20px; background: #f6f8fa; border-radius: 8px; text-align: center; border-top: 2px solid #e1e5e9; }
+        .footer-info { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+        .footer-item { }
+        .footer-item strong { color: #0366d6; }
+        .footer-links { margin-top: 15px; }
+        .footer-links a { color: #0366d6; text-decoration: none; margin: 0 10px; }
+        .footer-links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to CURSOR-SKILLS</a>
+        
+        <div class="header">
+            <h1>🛠️ ${template.title}</h1>
+            <p>${template.description}</p>
+        </div>
+        
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/docs/">Documentation</a>
+            <a href="/templates/">Templates</a>
+            <a href="/examples/">Examples</a>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h3>📋 Template Files</h3>
+                <div class="links">
+                    <a href="/templates/${env}/${template.id}/README.md">Documentation</a>
+                    <a href="/templates/${env}/${template.id}/package.json">Package Info</a>
+                    <a href="/templates/${env}/${template.id}/src/">Source Code</a>
+                    <a href="/templates/${env}/${template.id}/config/">Configuration</a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>🛠️ Development</h3>
+                <div class="links">
+                    <a href="/examples/${env}/">${env.charAt(0).toUpperCase() + env.slice(1)} Examples</a>
+                    <a href="/configs/${env}/">${env.charAt(0).toUpperCase() + env.slice(1)} Configuration</a>
+                    <a href="/environments/${env}/">${env.charAt(0).toUpperCase() + env.slice(1)} Environment</a>
+                    <a href="/docs/CURSOR.md">CURSOR IDE Rules</a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>📚 Resources</h3>
+                <div class="links">
+                    <a href="/docs/README.md">Main Documentation</a>
+                    <a href="/docs/CONTRIBUTING.md">Contributing Guide</a>
+                    <a href="/docs/CHANGELOG.md">Changelog</a>
+                    <a href="/docs/CURSOR.md">CURSOR IDE Rules</a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>🔧 Configuration</h3>
+                <div class="links">
+                    <a href="/configs/settings.json">CURSOR IDE Settings</a>
+                    <a href="/configs/extensions.json">Recommended Extensions</a>
+                    <a href="/configs/launch.json">Launch Configuration</a>
+                    <a href="/configs/tasks.json">Task Configuration</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="footer-item">
+                    <strong>Last Updated:</strong><br>
+                    ${currentDate} at ${currentTime}
+                </div>
+                <div class="footer-item">
+                    <strong>Version:</strong><br>
+                    v0.3.0
+                </div>
+                <div class="footer-item">
+                    <strong>Status:</strong><br>
+                    ✅ Production Ready
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="/docs/CHANGELOG.md">📋 View Changelog</a>
+                <a href="https://github.com/araguaci/cursor-skills">🐙 GitHub Repository</a>
+                <a href="/docs/CONTRIBUTING.md">🤝 Contribute</a>
+                <a href="/docs/README.md">📖 Documentation</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+        await fs.writeFile(path.join(templatePath, 'index.html'), templateHtml);
+        console.log(chalk.gray(`  ✓ Generated template page for ${env}/${template.id}`));
+      }
+    }
+    
+    console.log(chalk.gray('  ✓ Specific template pages generated'));
   }
 
   getEnvironmentExamples(env) {
