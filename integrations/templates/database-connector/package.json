@@ -1,0 +1,10 @@
+{
+  "name": "database-connector",
+  "version": "1.0.0",
+  "description": "Template for integrations development",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Starting template...\"",
+    "test": "echo \"Running tests...\""
+  }
+}

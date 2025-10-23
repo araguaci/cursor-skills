@@ -1,0 +1,10 @@
+{
+  "name": "nestjs-starter",
+  "version": "1.0.0",
+  "description": "Template for node development",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Starting template...\"",
+    "test": "echo \"Running tests...\""
+  }
+}

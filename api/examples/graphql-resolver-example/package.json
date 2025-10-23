@@ -1,0 +1,9 @@
+{
+  "name": "graphql-resolver-example",
+  "version": "1.0.0",
+  "description": "Example for api development",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}

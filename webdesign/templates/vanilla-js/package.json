@@ -1,0 +1,10 @@
+{
+  "name": "vanilla-js",
+  "version": "1.0.0",
+  "description": "Template for webdesign development",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Starting template...\"",
+    "test": "echo \"Running tests...\""
+  }
+}

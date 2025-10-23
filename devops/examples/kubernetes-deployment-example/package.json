@@ -1,0 +1,9 @@
+{
+  "name": "kubernetes-deployment-example",
+  "version": "1.0.0",
+  "description": "Example for devops development",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}

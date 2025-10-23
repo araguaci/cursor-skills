@@ -1,0 +1,9 @@
+{
+  "name": "wordpress-plugin-example",
+  "version": "1.0.0",
+  "description": "Example for php development",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}

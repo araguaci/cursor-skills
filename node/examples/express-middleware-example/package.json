@@ -1,0 +1,9 @@
+{
+  "name": "express-middleware-example",
+  "version": "1.0.0",
+  "description": "Example for node development",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}

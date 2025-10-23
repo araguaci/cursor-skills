@@ -1,0 +1,9 @@
+{
+  "name": "cypress-e2e-example",
+  "version": "1.0.0",
+  "description": "Example for testing development",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}

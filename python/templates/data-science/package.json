@@ -1,0 +1,10 @@
+{
+  "name": "data-science",
+  "version": "1.0.0",
+  "description": "Template for python development",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Starting template...\"",
+    "test": "echo \"Running tests...\""
+  }
+}

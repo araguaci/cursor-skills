@@ -1,0 +1,45 @@
+{
+  "name": "cursor-skills",
+  "version": "0.3.0",
+  "description": "A comprehensive repository of best practices, rules, and guidelines for working with CURSOR IDE across different programming environments",
+  "main": "index.js",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "validate": "node scripts/validate.js",
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js",
+    "docs": "node scripts/docs.js",
+    "lint": "node scripts/lint.js",
+    "format": "node scripts/format.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cursor-skills/community.git"
+  },
+  "keywords": [
+    "cursor",
+    "ide",
+    "development",
+    "best-practices",
+    "guidelines",
+    "php",
+    "python",
+    "javascript",
+    "webdesign",
+    "api",
+    "integrations"
+  ],
+  "author": "CURSOR-SKILLS Community",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cursor-skills/community/issues"
+  },
+  "homepage": "https://github.com/cursor-skills/community#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

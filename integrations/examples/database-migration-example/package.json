@@ -1,0 +1,9 @@
+{
+  "name": "database-migration-example",
+  "version": "1.0.0",
+  "description": "Example for integrations development",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  }
+}

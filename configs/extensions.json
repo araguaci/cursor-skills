@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-vscode.vscode-json",
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "ms-python.python",
+    "ms-vscode.vscode-typescript-next"
+  ]
+}
