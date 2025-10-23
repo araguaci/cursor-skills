@@ -32,6 +32,7 @@ class CursorSkillsBuilder {
       await this.generateEnvironmentPages();
       await this.generateSectionPages();
       await this.generateEnvironmentSectionPages();
+      await this.generateEnvironmentConfigPages();
       await this.copyAssets();
       
       console.log(chalk.green.bold('✅ Build completed successfully!'));
@@ -79,6 +80,23 @@ class CursorSkillsBuilder {
     const mainDocs = ['README.md', 'CURSOR.md', 'CONTRIBUTING.md', 'LICENSE', 'CHANGELOG.md'];
     
     for (const doc of mainDocs) {
+      const srcPath = path.join(this.projectRoot, doc);
+      const destPath = path.join(this.buildDir, 'docs', doc);
+      
+      if (await fs.pathExists(srcPath)) {
+        await fs.copy(srcPath, destPath);
+        console.log(chalk.gray(`  ✓ Copied ${doc}`));
+      }
+    }
+    
+    // Copy additional documentation files
+    const additionalDocs = [
+      'GITHUB_SETUP.md', 'VERCEL_DEPLOY.md', 'GITHUB_PAGES_SETUP.md', 
+      'GITHUB_BRANCH_PROTECTION.md', 'PROJECT_STRUCTURE.md', 
+      'NEXT_STEPS.md', 'PROJECT_STATUS.md', 'DEPLOY.md'
+    ];
+    
+    for (const doc of additionalDocs) {
       const srcPath = path.join(this.projectRoot, doc);
       const destPath = path.join(this.buildDir, 'docs', doc);
       
@@ -1114,6 +1132,145 @@ class CursorSkillsBuilder {
     }
     
     console.log(chalk.gray('  ✓ Environment section pages generated'));
+  }
+
+  async generateEnvironmentConfigPages() {
+    console.log(chalk.yellow('📄 Generating environment config pages...'));
+    
+    const currentDate = new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+    const currentTime = new Date().toLocaleTimeString('en-US', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+
+    // Generate config pages for each environment
+    for (const env of this.environments) {
+      const configPath = path.join(this.buildDir, 'configs', env);
+      await fs.ensureDir(configPath);
+      
+      const configHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CURSOR-SKILLS - ${env.charAt(0).toUpperCase() + env.slice(1)} Configuration</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f6f8fa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #e1e5e9; padding-bottom: 20px; }
+        .nav { margin-bottom: 30px; }
+        .nav a { color: #0366d6; text-decoration: none; margin-right: 20px; }
+        .nav a:hover { text-decoration: underline; }
+        .content { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .section { }
+        .section h3 { color: #0366d6; margin-top: 0; }
+        .links { margin-top: 15px; }
+        .links a { display: block; margin-bottom: 8px; color: #0366d6; text-decoration: none; padding: 8px 12px; background: #f6f8fa; border-radius: 4px; }
+        .links a:hover { background: #e1e5e9; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #0366d6; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .footer { margin-top: 60px; padding: 20px; background: #f6f8fa; border-radius: 8px; text-align: center; border-top: 2px solid #e1e5e9; }
+        .footer-info { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; }
+        .footer-item { }
+        .footer-item strong { color: #0366d6; }
+        .footer-links { margin-top: 15px; }
+        .footer-links a { color: #0366d6; text-decoration: none; margin: 0 10px; }
+        .footer-links a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to CURSOR-SKILLS</a>
+        
+        <div class="header">
+            <h1>⚙️ CURSOR-SKILLS - ${env.charAt(0).toUpperCase() + env.slice(1)} Configuration</h1>
+            <p>CURSOR IDE configurations and settings for ${env} development.</p>
+        </div>
+        
+        <div class="nav">
+            <a href="/">Home</a>
+            <a href="/docs/">Documentation</a>
+            <a href="/templates/">Templates</a>
+            <a href="/examples/">Examples</a>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h3>🔧 Main Configuration</h3>
+                <div class="links">
+                    <a href="/configs/settings.json">CURSOR IDE Settings</a>
+                    <a href="/configs/extensions.json">Recommended Extensions</a>
+                    <a href="/configs/launch.json">Launch Configuration</a>
+                    <a href="/configs/tasks.json">Task Configuration</a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>🌍 Environment-Specific</h3>
+                <div class="links">
+                    <a href="/configs/${env}/settings.json">${env.charAt(0).toUpperCase() + env.slice(1)} Settings</a>
+                    <a href="/configs/${env}/extensions.json">${env.charAt(0).toUpperCase() + env.slice(1)} Extensions</a>
+                    <a href="/configs/${env}/launch.json">${env.charAt(0).toUpperCase() + env.slice(1)} Launch Config</a>
+                    <a href="/configs/${env}/tasks.json">${env.charAt(0).toUpperCase() + env.slice(1)} Tasks</a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>📋 Setup Guides</h3>
+                <div class="links">
+                    <a href="/docs/GITHUB_SETUP.md">GitHub Setup</a>
+                    <a href="/docs/VERCEL_DEPLOY.md">Vercel Deployment</a>
+                    <a href="/docs/GITHUB_PAGES_SETUP.md">GitHub Pages Setup</a>
+                    <a href="/docs/GITHUB_BRANCH_PROTECTION.md">Branch Protection</a>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>🛠️ Development Tools</h3>
+                <div class="links">
+                    <a href="/docs/CONTRIBUTING.md">Contributing Guide</a>
+                    <a href="/docs/CHANGELOG.md">Changelog</a>
+                    <a href="/docs/README.md">Main Documentation</a>
+                    <a href="/docs/CURSOR.md">CURSOR IDE Rules</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-info">
+                <div class="footer-item">
+                    <strong>Last Updated:</strong><br>
+                    ${currentDate} at ${currentTime}
+                </div>
+                <div class="footer-item">
+                    <strong>Version:</strong><br>
+                    v0.3.0
+                </div>
+                <div class="footer-item">
+                    <strong>Status:</strong><br>
+                    ✅ Production Ready
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="/docs/CHANGELOG.md">📋 View Changelog</a>
+                <a href="https://github.com/araguaci/cursor-skills">🐙 GitHub Repository</a>
+                <a href="/docs/CONTRIBUTING.md">🤝 Contribute</a>
+                <a href="/docs/README.md">📖 Documentation</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`;
+
+      await fs.writeFile(path.join(configPath, 'index.html'), configHtml);
+      console.log(chalk.gray(`  ✓ Generated config page for ${env}`));
+    }
+    
+    console.log(chalk.gray('  ✓ Environment config pages generated'));
   }
 
   getEnvironmentExamples(env) {
