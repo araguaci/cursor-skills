@@ -1,0 +1,19 @@
+# Vercel redirects for SPA routing
+/*    /index.html   200
+
+# Specific redirects for environments
+/php/*    /environments/php/index.html    200
+/webdesign/*    /environments/webdesign/index.html    200
+/python/*    /environments/python/index.html    200
+/node/*    /environments/node/index.html    200
+/api/*    /environments/api/index.html    200
+/integrations/*    /environments/integrations/index.html    200
+/mobile/*    /environments/mobile/index.html    200
+/devops/*    /environments/devops/index.html    200
+/testing/*    /environments/testing/index.html    200
+
+# Documentation redirects
+/docs/*    /docs/index.html    200
+/templates/*    /templates/index.html    200
+/examples/*    /examples/index.html    200
+/configs/*    /configs/index.html    200

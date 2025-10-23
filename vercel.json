@@ -12,6 +12,42 @@
   ],
   "routes": [
     {
+      "src": "/php/(.*)",
+      "dest": "/environments/php/index.html"
+    },
+    {
+      "src": "/webdesign/(.*)",
+      "dest": "/environments/webdesign/index.html"
+    },
+    {
+      "src": "/python/(.*)",
+      "dest": "/environments/python/index.html"
+    },
+    {
+      "src": "/node/(.*)",
+      "dest": "/environments/node/index.html"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/environments/api/index.html"
+    },
+    {
+      "src": "/integrations/(.*)",
+      "dest": "/environments/integrations/index.html"
+    },
+    {
+      "src": "/mobile/(.*)",
+      "dest": "/environments/mobile/index.html"
+    },
+    {
+      "src": "/devops/(.*)",
+      "dest": "/environments/devops/index.html"
+    },
+    {
+      "src": "/testing/(.*)",
+      "dest": "/environments/testing/index.html"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

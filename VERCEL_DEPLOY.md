@@ -215,15 +215,15 @@ VERCEL_ENV=preview
 ### 9. Deploy Checklist
 
 #### Pré-Deploy
-- [ ] Código commitado no GitHub
-- [ ] Build local funcionando
-- [ ] Validação passando (94%+)
-- [ ] Testes passando (96%+)
-- [ ] Diretório `dist/` criado
-- [ ] Arquivos estáticos presentes
+- [x] Código commitado no GitHub
+- [x] Build local funcionando
+- [x] Validação passando (94%+)
+- [x] Testes passando (96%+)
+- [x] Diretório `dist/` criado
+- [x] Arquivos estáticos presentes
 
 #### Pós-Deploy
-- [ ] Site acessível
+- [x] Site acessível
 - [ ] Todas as páginas funcionando
 - [ ] Links funcionando
 - [ ] Performance adequada
