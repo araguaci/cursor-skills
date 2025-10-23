@@ -757,6 +757,56 @@ tests/
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; }
         .container { max-width: 1200px; margin: 0 auto; }
+        
+        /* GitHub Fork Ribbon */
+        .github-fork-ribbon {
+          position: fixed;
+          top: 0;
+          right: 0;
+          z-index: 1000;
+          width: 150px;
+          height: 150px;
+          overflow: hidden;
+          pointer-events: none;
+        }
+        
+        .github-fork-ribbon::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 200%;
+          height: 200%;
+          background: #0366d6;
+          transform: rotate(45deg);
+          transform-origin: 0 0;
+          pointer-events: auto;
+        }
+        
+        .github-fork-ribbon::after {
+          content: 'Fork me on GitHub';
+          position: absolute;
+          top: 35px;
+          right: 5px;
+          color: white;
+          font-size: 12px;
+          font-weight: bold;
+          text-align: center;
+          line-height: 1.2;
+          transform: rotate(45deg);
+          pointer-events: auto;
+        }
+        
+        .github-fork-ribbon a {
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 100%;
+          height: 100%;
+          display: block;
+          text-decoration: none;
+          color: transparent;
+        }
         .header { text-align: center; margin-bottom: 40px; }
         .environments { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .environment { border: 1px solid #e1e5e9; border-radius: 8px; padding: 20px; }
@@ -774,6 +824,11 @@ tests/
     </style>
 </head>
 <body>
+    <!-- GitHub Fork Ribbon -->
+    <div class="github-fork-ribbon">
+        <a href="https://github.com/araguaci/cursor-skills" target="_blank" rel="noopener noreferrer"></a>
+    </div>
+    
     <div class="container">
         <div class="header">
             <h1>🚀 CURSOR-SKILLS Community Repository</h1>
@@ -896,6 +951,11 @@ tests/
     </style>
 </head>
 <body>
+    <!-- GitHub Fork Ribbon -->
+    <div class="github-fork-ribbon">
+        <a href="https://github.com/araguaci/cursor-skills" target="_blank" rel="noopener noreferrer"></a>
+    </div>
+    
     <div class="container">
         <a href="/" class="back-link">← Back to CURSOR-SKILLS</a>
         
@@ -4663,9 +4723,357 @@ app.listen(PORT, () => {
         { id: 'react-native-navigation-example', title: 'React Native Navigation Example', description: 'Navigation with React Native' }
       ],
       'devops': [
-        { id: 'docker-compose-example', title: 'Docker Compose Example', description: 'Multi-container setup' },
-        { id: 'github-actions-example', title: 'GitHub Actions Example', description: 'CI/CD pipeline setup' },
-        { id: 'kubernetes-deployment-example', title: 'Kubernetes Deployment Example', description: 'K8s deployment configuration' }
+        { 
+          id: 'docker-compose-example', 
+          title: 'Docker Compose Example', 
+          description: 'Multi-container application setup with Docker Compose',
+          code: `# Docker Compose Example
+version: '3.8'
+
+services:
+  # Web Application
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://user:password@db:5432/myapp
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./src:/app/src
+    networks:
+      - app-network
+
+  # Database
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=myapp
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - web
+    networks:
+      - app-network
+
+  # Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - app-network
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  grafana_data:
+
+networks:
+  app-network:
+    driver: bridge`,
+          files: ['docker-compose.yml', 'Dockerfile', 'nginx.conf', 'prometheus.yml']
+        },
+        { 
+          id: 'github-actions-example', 
+          title: 'GitHub Actions Example', 
+          description: 'CI/CD pipeline with automated testing and deployment',
+          code: `# GitHub Actions CI/CD Pipeline
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: \${{ github.repository }}
+
+jobs:
+  # Lint and Test
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16, 18, 20]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: \${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run linter
+      run: npm run lint
+      
+    - name: Run tests
+      run: npm run test:coverage
+      
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+
+  # Security Scan
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run security audit
+      run: npm audit --audit-level=moderate
+      
+    - name: Run Snyk security scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: \${{ secrets.SNYK_TOKEN }}
+
+  # Build and Push Docker Image
+  build:
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: \${{ env.REGISTRY }}
+        username: \${{ github.actor }}
+        password: \${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: \${{ env.REGISTRY }}/\${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=sha,prefix={{branch}}-
+          
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: \${{ steps.meta.outputs.tags }}
+        labels: \${{ steps.meta.outputs.labels }}
+
+  # Deploy to Staging
+  deploy-staging:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment"
+        # Add your deployment commands here
+        
+  # Deploy to Production
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment"
+        # Add your production deployment commands here`,
+          files: ['.github/workflows/ci-cd.yml', 'Dockerfile', 'docker-compose.yml']
+        },
+        { 
+          id: 'kubernetes-deployment-example', 
+          title: 'Kubernetes Deployment Example', 
+          description: 'Kubernetes deployment with services, ingress, and monitoring',
+          code: `# Kubernetes Deployment Example
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  labels:
+    app: web-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+      - name: web-app
+        image: myapp:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: database-url
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app-service
+spec:
+  selector:
+    app: web-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - myapp.example.com
+    secretName: myapp-tls
+  rules:
+  - host: myapp.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-app-service
+            port:
+              number: 80
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+type: Opaque
+data:
+  database-url: <base64-encoded-database-url>
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: web-app-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: web-app
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80`,
+          files: ['k8s/deployment.yaml', 'k8s/service.yaml', 'k8s/ingress.yaml', 'k8s/hpa.yaml']
+        }
       ],
       'testing': [
         { id: 'cypress-e2e-example', title: 'Cypress E2E Example', description: 'End-to-end testing with Cypress' },
