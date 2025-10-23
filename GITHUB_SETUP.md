@@ -130,14 +130,14 @@ Adicione estes topics ao repositório:
 ## 📋 Checklist de Publicação
 
 ### Pré-Publicação
-- [ ] Repositório criado no GitHub
-- [ ] Remote origin configurado
-- [ ] Primeiro push realizado
-- [ ] README.md atualizado
-- [ ] Badges adicionados
+- [x] Repositório criado no GitHub
+- [x] Remote origin configurado
+- [x] Primeiro push realizado
+- [x] README.md atualizado
+- [x] Badges adicionados
 - [ ] Topics configurados
-- [ ] Issues habilitados
-- [ ] Discussions habilitados
+- [x] Issues habilitados
+- [x] Discussions habilitados
 
 ### Pós-Publicação
 - [ ] Testar deploy automático

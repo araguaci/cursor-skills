@@ -1,3 +1,9 @@
+![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Status](https://img.shields.io/badge/status-production-brightgreen.svg)
+![Validation](https://img.shields.io/badge/validation-94%25-success.svg)
+![Tests](https://img.shields.io/badge/tests-96%25-success.svg)
+
 # CURSOR-SKILLS Community Repository
 
 ## Overview
